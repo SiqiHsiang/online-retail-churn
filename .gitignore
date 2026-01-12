@@ -1,0 +1,17 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Local data (never commit)
+data/
+*.csv
+*.xlsx
+*.parquet
+
+# AWS
+.aws/
+.env
+
+# OS
+.DS_Store
