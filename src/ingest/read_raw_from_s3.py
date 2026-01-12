@@ -9,8 +9,8 @@ def read_raw_excel_from_s3(bucket: str, key: str) -> pd.DataFrame:
     s3 = boto3.client("s3")
     obj = s3.get_object(Bucket=bucket, Key=key)
 
-    data = obj["Body"].read()          # 读成 bytes
-    bio = BytesIO(data)                 # 包装成可 seek 的 file-like
+    data = obj["Body"].read()         
+    bio = BytesIO(data)                
     df = pd.read_excel(bio, engine="openpyxl")
     return df
 
