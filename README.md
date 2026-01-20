@@ -32,24 +32,24 @@ Label:
 ## Repository structure
 
 - **`artifacts/`**
--- `operator_readme.md`              # Human-facing campaign brief (stable, not auto-generated)
+    - `operator_readme.md`              # Human-facing campaign brief (stable, not auto-generated)
 - **`notebooks/`**
--- `01_raw_data_profile.ipynb`      # Raw data profiling (types, missingness, sanity checks)
--- `02_customer_snapshot_exploration.ipynb`
--- `03_train_baseline_model.ipynb`   # Baseline modeling experiments
--- `04_policy_expected_value.ipynb`  # Capacity vs EV curves, policy comparisons
--- `05_artifact_review.ipynb`        # Inspect final artifacts from S3
+    - `01_raw_data_profile.ipynb`      # Raw data profiling (types, missingness, sanity checks)
+    - `02_customer_snapshot_exploration.ipynb`
+    - `03_train_baseline_model.ipynb`   # Baseline modeling experiments
+    - `04_policy_expected_value.ipynb`  # Capacity vs EV curves, policy comparisons
+    - `05_artifact_review.ipynb`        # Inspect final artifacts from S3
 - **`src/`**
--- `ingest/`
--------- `read_raw_from_s3.py`         # Read raw Excel from S3
--- `processing/`
--------- `process_raw_to_parquet.py`   # Clean + normalize + write processed parquet to S3
--- `features/`
--------- `build_customer_snapshot.py`  # Build customer snapshot (features + churn label)
--- `scoring/`
---------`init.py`
---------`policy.py`                   # Segmented policy assumptions (cost/uplift/coupon)
---------`batch_score.py`            # Batch scoring: scores + ranked list + run summary
+    - `ingest/`
+        - `read_raw_from_s3.py`         # Read raw Excel from S3
+    - `processing/`
+        - `process_raw_to_parquet.py`   # Clean + normalize + write processed parquet to S3
+    - `features/`
+        - `build_customer_snapshot.py`  # Build customer snapshot (features + churn label)
+    - `scoring/`
+        - `init.py`
+        - `policy.py`                   # Segmented policy assumptions (cost/uplift/coupon)
+        - `batch_score.py`            # Batch scoring: scores + ranked list + run summary
 - **`.gitignore`**
 - **`requirements.txt`**
 - **`README.md`**
