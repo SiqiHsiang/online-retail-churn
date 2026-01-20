@@ -17,7 +17,7 @@ TOPK = 500
 SNAPSHOT_KEY = f"features/online_retail/dt={DT}/customer_snapshot_ref={REF_DATE}.parquet"
 SCORES_KEY = f"scores/online_retail/dt={DT}/ref={REF_DATE}/scores.parquet"
 RANKED_KEY = f"artifacts/online_retail/dt={DT}/ref={REF_DATE}/ranked_list_topK={TOPK}.parquet"
-MEMO_KEY = f"artifacts/online_retail/dt={DT}/ref={REF_DATE}/decision_memo.md"
+MEMO_KEY = f"artifacts/online_retail/dt={DT}/ref={REF_DATE}/run_summary.md"
 
 # ======================
 # IO helpers
@@ -101,7 +101,7 @@ def apply_policy(df):
 # ======================
 # Memo
 # ======================
-def make_memo(base_rate, precision_topk, total_ev_topk):
+def make_run_summary(base_rate, precision_topk, total_ev_topk):
     now = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
 
     policy_lines = "\n".join(
@@ -109,27 +109,31 @@ def make_memo(base_rate, precision_topk, total_ev_topk):
         for k, v in POLICY_TABLE.items()
     )
 
-    return f"""# Retention Targeting Decision Memo
+    return f"""# Retention Targeting – Run Summary
 
 Generated: {now}
 
-## Run config
+## Run configuration
 - dt: {DT}
 - reference_date: {REF_DATE}
 - topK: {TOPK}
 
-## Policy assumptions
+## Policy assumptions (offline simulation)
 {policy_lines}
 
-## Offline metrics
-- Base churn rate: {base_rate:.3f}
+## Offline evaluation metrics
+- Base churn rate (all customers): {base_rate:.3f}
 - Precision@{TOPK}: {precision_topk:.3f}
-- Cumulative EV (Top-{TOPK}): €{total_ev_topk:,.0f}
+- Cumulative Expected Value (Top-{TOPK}): €{total_ev_topk:,.0f}
 
-## Recommendation
-Use the Top-{TOPK} EV-ranked customer list for the campaign.
-Apply incentives according to value segment.
-Validate uplift assumptions via A/B testing before scaling.
+## Notes
+- This document is **auto-generated** for traceability and reproducibility.
+- All uplift and cost values are **assumptions**, not observed outcomes.
+- Results should be validated via controlled experiments (A/B tests) before rollout.
+
+## Recommended usage
+Use the Top-{TOPK} EV-ranked customer list as the candidate pool for the retention campaign.
+Apply incentives according to the assigned value segment.
 """
 
 # ======================
@@ -179,7 +183,7 @@ if __name__ == "__main__":
     precision_topk = float(ranked["churn_60d"].mean())
     total_ev_topk = float(ranked["ev"].sum())
 
-    memo = make_memo(base_rate, precision_topk, total_ev_topk)
+    memo = make_run_summary(base_rate, precision_topk, total_ev_topk)
     print(f"Writing memo to s3://{BUCKET}/{MEMO_KEY}")
     write_text_to_s3(s3, memo, BUCKET, MEMO_KEY)
 
