@@ -21,6 +21,25 @@ EV is computed as:
 
 > Uplift and cost are assumptions (offline simulation). In a real deployment they must be validated via controlled experiments (A/B tests).
 
+### Key Outcome (Offline Simulation)
+Under the current policy assumptions and a capacity constraint of Top-500 customers, the expected-value–optimal strategy prioritizes high-value customers with higher incentives.
+
+At this scale, concentrating resources on high-value segments maximizes expected return. Further segmentation becomes more valuable as campaign capacity increases.
+
+For execution details and operational guidance, see:
+- `artifacts/operator_readme.md`
+
+## Data Source
+
+This project is based on [the UCI Online Retail Dataset](https://archive.ics.uci.edu/dataset/352/online+retail), which contains transactional data for a UK-based online retailer.
+- Data type: historical transaction-level records
+- Usage in this project:
+  - Raw Excel data is ingested and stored in an S3-style data lake
+  - All features, labels, and downstream artifacts are derived from this dataset
+
+The S3 bucket used in this project is private.  
+However, all data processing logic is fully reproducible using the public dataset above.
+
 ## Data windows (single snapshot run)
 - Snapshot (reference) date: `2011-10-10`
 - Lookback window: 180 days (features)
